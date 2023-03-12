@@ -3,12 +3,12 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
-public class Process_01 extends Thread {
+public class Process extends Thread {
 
     private int id;
     private int time;
 
-    public Process_01(int id, int time) {
+    public Process(int id, int time) {
         this.id = id;
         this.time = time;
     }
@@ -28,10 +28,13 @@ public class Process_01 extends Thread {
 
                 if (time == 8) {
                     b = Integer.toString(time).getBytes();
-                    pkg = new DatagramPacket(b, b.length, addr, 6000);
+                    pkg = new DatagramPacket(b, b.length, addr, 6001);
                     enviarCast.send(pkg);
+                } else {
+                    pkg = new DatagramPacket(b, b.length, addr, 6000);
+                    receberCast.receive(pkg);
+                    System.out.println(id + " " + new String(pkg.getData(), 0, pkg.getLength()));
                 }
-                receberCast.receive(pkg);
             }
         } catch (Exception e) {
             System.out.println("Erro");
