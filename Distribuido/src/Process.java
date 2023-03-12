@@ -35,8 +35,9 @@ public class Process extends Thread {
 
             while (true) {
 
-                if (time == 8)
+                if (time == 8 || time == 12) {
                     wantUsing = true;
+                }
 
                 if (wantUsing) {
                     b = (Integer.toString(time) + ";" + Integer.toString(id)).getBytes();
@@ -65,6 +66,7 @@ public class Process extends Thread {
                         enviarCast.send(pkg);
                     }
                 }
+                // incrementTime();
             }
         } catch (Exception e) {
             System.out.println("Erro");
@@ -87,5 +89,10 @@ public class Process extends Thread {
                 }
             }
         }
+    }
+
+    public synchronized int incrementTime() throws InterruptedException {
+        Thread.sleep(60000);
+        return time++;
     }
 }
