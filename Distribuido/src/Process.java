@@ -6,15 +6,12 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketTimeoutException;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class Process extends Thread {
 
     private int id;
     private int time;
     private boolean wantUsing;
-    private Queue queue = new LinkedList();
     public static int totalProcess;
 
     public Process(int id, int time) {
@@ -89,10 +86,10 @@ public class Process extends Thread {
         DatagramPacket pkg = new DatagramPacket(b, b.length);
         InetAddress addr = InetAddress.getByName("239.0.0.1");
         try {
-            // Espera por 1 segundo alguem querer usar a zona critica
+
             receberCast.setSoTimeout(1000);
             while (true) {
-                receberCast.receive(pkg);// recebendo os dados enviados via multicast para o endere�o acima
+                receberCast.receive(pkg);
                 if (pkg.getData().length > 0) {
                     b = "Ok".getBytes();
                     pkg = new DatagramPacket(b, b.length, addr, 6001);
@@ -106,7 +103,6 @@ public class Process extends Thread {
     }
 
     public int incrementTime() throws InterruptedException {
-        // Thread.sleep(10000);
         return time++;
     }
 }

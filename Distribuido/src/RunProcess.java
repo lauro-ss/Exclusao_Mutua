@@ -3,6 +3,6 @@ public class RunProcess {
         Process.totalProcess = 3;
         new Process(0, 7).start();
         new Process(1, 6).start();
-        new Process(2, 11).start();
+        new Process(2, 10).start();
     }
 }
