@@ -57,16 +57,8 @@ public class Process extends Thread {
                         time = 9;
                     }
                 } else {
-                    pkg = new DatagramPacket(b, b.length, addr, 6000);
-                    receberCast.receive(pkg);
-                    if (pkg.getData().length > 0) {
-                        // Não está usando a zona critica
-                        b = "Ok".getBytes();
-                        pkg = new DatagramPacket(b, b.length, addr, 6001);
-                        enviarCast.send(pkg);
-                    }
+                    SandOks(receberCast, enviarCast);
                 }
-                // incrementTime();
             }
         } catch (Exception e) {
             System.out.println("Erro");
@@ -91,8 +83,30 @@ public class Process extends Thread {
         }
     }
 
-    public synchronized int incrementTime() throws InterruptedException {
-        Thread.sleep(60000);
+    private void SandOks(MulticastSocket receberCast, DatagramSocket enviarCast)
+            throws IOException, InterruptedException {
+        byte b[] = new byte[256];
+        DatagramPacket pkg = new DatagramPacket(b, b.length);
+        InetAddress addr = InetAddress.getByName("239.0.0.1");
+        try {
+            // Espera por 1 segundo alguem querer usar a zona critica
+            receberCast.setSoTimeout(1000);
+            while (true) {
+                receberCast.receive(pkg);// recebendo os dados enviados via multicast para o endere�o acima
+                if (pkg.getData().length > 0) {
+                    b = "Ok".getBytes();
+                    pkg = new DatagramPacket(b, b.length, addr, 6001);
+                    enviarCast.send(pkg);
+                }
+            }
+        } catch (SocketTimeoutException te) {
+            incrementTime();
+            return;
+        }
+    }
+
+    public int incrementTime() throws InterruptedException {
+        // Thread.sleep(10000);
         return time++;
     }
 }

@@ -1,8 +1,8 @@
 public class RunProcess {
     public static void main(String[] args) throws Exception {
-        Process.totalProcess = 2;
-        new Process(0, 8).start();
-        new Process(1, 9).start();
-        // new Process(2, 12).start();
+        Process.totalProcess = 3;
+        new Process(0, 7).start();
+        new Process(1, 6).start();
+        new Process(2, 11).start();
     }
 }
