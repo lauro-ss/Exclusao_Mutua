@@ -32,7 +32,7 @@ public class Process extends Thread {
 
             while (true) {
 
-                if (time == 8 || time == 12) {
+                if ((time + id) % 2 == 0) {
                     wantUsing = true;
                 }
 
@@ -109,7 +109,7 @@ public class Process extends Thread {
     }
 
     public synchronized int incrementTime() {
-        System.out.println(time);
+        System.out.println("Tempo: " + time);
         return time++;
     }
 }
