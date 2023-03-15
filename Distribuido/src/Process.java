@@ -10,8 +10,9 @@ import java.net.SocketTimeoutException;
 public class Process extends Thread {
 
     private int id;
-    private int time;
     private boolean wantUsing;
+    private int time;
+
     public static int totalProcess;
 
     public Process(int id, int time) {
@@ -43,7 +44,7 @@ public class Process extends Thread {
 
                     // Acessar zona critica
                     if (WaitForOks(receberCast)) {
-                        System.out.println("Zona Crítica");
+                        System.out.println(id + " Acessando Zona Crítica");
                         String str = "Escrito no tempo: " + time + " Por: " + id;
                         BufferedWriter writer = new BufferedWriter(new FileWriter("zona_critica.txt", true));
                         writer.append(str);
@@ -51,7 +52,7 @@ public class Process extends Thread {
 
                         writer.close();
                         wantUsing = false;
-                        time = 9;
+                        incrementTime();
                     }
                 } else {
                     SandOks(receberCast, enviarCast);
@@ -85,8 +86,8 @@ public class Process extends Thread {
         byte b[] = new byte[256];
         DatagramPacket pkg = new DatagramPacket(b, b.length);
         InetAddress addr = InetAddress.getByName("239.0.0.1");
+        int countProcess = 0;
         try {
-
             receberCast.setSoTimeout(1000);
             while (true) {
                 receberCast.receive(pkg);
@@ -94,6 +95,12 @@ public class Process extends Thread {
                     b = "Ok".getBytes();
                     pkg = new DatagramPacket(b, b.length, addr, 6001);
                     enviarCast.send(pkg);
+                    countProcess++;
+                    if (countProcess == totalProcess) {
+                        Thread.sleep(1000);
+                        incrementTime();
+                        return;
+                    }
                 }
             }
         } catch (SocketTimeoutException te) {
@@ -102,7 +109,7 @@ public class Process extends Thread {
         }
     }
 
-    public int incrementTime() throws InterruptedException {
+    public synchronized int incrementTime() {
         return time++;
     }
 }
