@@ -11,13 +11,12 @@ public class Process extends Thread {
 
     private int id;
     private boolean wantUsing;
-    private int time;
 
+    public static int time;
     public static int totalProcess;
 
-    public Process(int id, int time) {
+    public Process(int id) {
         this.id = id;
-        this.time = time;
     }
 
     public void run() {
@@ -59,7 +58,7 @@ public class Process extends Thread {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Erro");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -110,6 +109,7 @@ public class Process extends Thread {
     }
 
     public synchronized int incrementTime() {
+        System.out.println(time);
         return time++;
     }
 }
